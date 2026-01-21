@@ -1,0 +1,96 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Flutter
+flutter/cameraapp/build/
+flutter/cameraapp/.dart_tool/
+flutter/cameraapp/.pub/
+flutter/cameraapp/packages/
+flutter/cameraapp/pubspec.lock
+flutter/cameraapp/*.iml
+flutter/cameraapp/*.ipr
+flutter/cameraapp/*.iws
+flutter/cameraapp/.metadata
+flutter/cameraapp/.packages
+flutter/cameraapp/coverage/
+flutter/cameraapp/logs/
+
+# Android
+flutter/cameraapp/android/.gradle/
+flutter/cameraapp/android/gradle/
+flutter/cameraapp/android/build/
+flutter/cameraapp/android/app/build/
+flutter/cameraapp/android/app/outputs/
+flutter/cameraapp/android/app/src/main/java/com/example/cameraapp/MainActivity.java
+flutter/cameraapp/android/local.properties
+
+# iOS
+flutter/cameraapp/ios/Flutter/App.framework
+flutter/cameraapp/ios/Flutter/flutter_assets
+flutter/cameraapp/ios/.symlinks/
+flutter/cameraapp/ios/Pods/
+flutter/cameraapp/ios/build/
+flutter/cameraapp/ios/Flutter/.last_build_id
+flutter/cameraapp/ios/Flutter/ephemeral/
+flutter/cameraapp/ios/Flutter/Generated.xcconfig
+
+# macOS
+.DS_Store
+flutter/cameraapp/ios/.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+flutter/cameraapp/windows/Flutter/ephemeral/
+
+# Linux
+*~
+
+# VS Code
+.vscode/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.swp
+*.swo
+
+# Secrets
+**/secret*
+**/private*
+**/config/secrets*
+**/credentials*
+**/keys/*
+temp-pin-storage.json
