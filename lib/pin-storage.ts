@@ -1,51 +1,21 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const PIN_FILE_PATH = path.join(process.cwd(), 'temp-pin-storage.json');
-
-interface PinStorage {
-  pin: string | null;
+// For Vercel serverless environment, use a global variable to persist PIN during server lifetime
+declare global {
+  var __PIN_STORAGE__: string | null | undefined;
 }
 
-// Initialize PIN file if it doesn't exist
-async function initializePinFile(): Promise<void> {
-  try {
-    await fs.access(PIN_FILE_PATH);
-  } catch {
-    // File doesn't exist, create it
-    const initialData: PinStorage = { pin: null };
-    await fs.writeFile(PIN_FILE_PATH, JSON.stringify(initialData, null, 2));
-  }
+// Initialize global PIN storage
+if (!global.__PIN_STORAGE__) {
+  global.__PIN_STORAGE__ = null;
 }
 
 export async function getPin(): Promise<string | null> {
-  try {
-    await initializePinFile();
-    const data = await fs.readFile(PIN_FILE_PATH, 'utf8');
-    const parsed = JSON.parse(data) as PinStorage;
-    return parsed.pin;
-  } catch (error) {
-    console.error('Error reading PIN:', error);
-    return null;
-  }
+  return global.__PIN_STORAGE__ ?? null;
 }
 
 export async function setPin(pin: string): Promise<void> {
-  try {
-    await initializePinFile();
-    const data: PinStorage = { pin };
-    await fs.writeFile(PIN_FILE_PATH, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error('Error setting PIN:', error);
-  }
+  global.__PIN_STORAGE__ = pin;
 }
 
 export async function clearPin(): Promise<void> {
-  try {
-    await initializePinFile();
-    const data: PinStorage = { pin: null };
-    await fs.writeFile(PIN_FILE_PATH, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error('Error clearing PIN:', error);
-  }
+  global.__PIN_STORAGE__ = null;
 }

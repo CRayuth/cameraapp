@@ -466,12 +466,13 @@ This comprehensive flow ensures secure, authenticated communication between the 
 
 #### PIN Storage on Vercel
 - **Issue**: Serverless functions don't maintain state between requests
-- **Current Solution**: File-based storage (`temp-pin-storage.json`) won't persist
+- **Current Solution**: In-memory storage using global variable (limited functionality)
+- **Limitation**: PIN may be lost when serverless function instances change
 - **Recommended Solutions**:
   1. **Vercel KV** (recommended):
      ```bash
-     # Enable Vercel KV in your project settings
-     # Use @vercel/kv package in your code
+     # Install @vercel/kv package
+     npm install @vercel/kv
      ```
   
   2. **External Database**:
@@ -480,6 +481,9 @@ This comprehensive flow ensures secure, authenticated communication between the 
 
   3. **Vercel Blob Storage** (for larger data):
      - For storing camera frames temporarily
+
+#### Important Note for Vercel Deployment
+Due to the current in-memory PIN storage implementation, the PIN may be reset when Vercel serverless functions restart. For production use, please consider upgrading to Vercel KV or an external database for persistent PIN storage.
 
 #### Optimized Configuration
 1. **Add Vercel configuration file** (`vercel.json`):
