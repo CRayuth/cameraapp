@@ -34,18 +34,26 @@ export async function POST(request: Request) {
 
             // Validate PIN if provided
             const currentPin = await getPin();
+            console.log('Camera API - Current stored PIN:', currentPin);
+            console.log('Camera API - Received PIN:', receivedAccessKey);
+            
             if (receivedAccessKey) {
                 
                 // Check if PIN exists and matches
                 if (currentPin === null) {
+                    console.log('Camera API - No PIN set on web interface');
                     return NextResponse.json({ error: 'PIN not set on web interface' }, { status: 401 });
                 } else if (currentPin !== receivedAccessKey) {
                     // PIN doesn't match the stored one
+                    console.log('Camera API - PIN mismatch. Stored:', currentPin, 'Received:', receivedAccessKey);
                     return NextResponse.json({ error: 'Invalid PIN' }, { status: 401 });
+                } else {
+                    console.log('Camera API - PIN validation successful');
                 }
             } else {
                 if (currentPin !== null) {
                     // PIN is required but wasn't provided
+                    console.log('Camera API - PIN required but not provided');
                     return NextResponse.json({ error: 'PIN required' }, { status: 401 });
                 }
             }

@@ -41,20 +41,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Auto-format IP to full URL if needed
     if (!enteredUrl.startsWith('http')) {
-      // Allow user to enter just "192.168.1.5"
-      enteredUrl = 'http://$enteredUrl:3000/api/camera';
+      // For local IPs, use port 3000 (e.g., 192.168.1.5 -> http://192.168.1.5:3000/api/camera)
+      // For domains (like Vercel deployments), use https without port (e.g., myapp.vercel.app -> https://myapp.vercel.app/api/camera)
+      if (enteredUrl.contains('.')) {
+        // Likely a domain name or IP address
+        if (enteredUrl.contains('vercel.app') || enteredUrl.contains('localhost') || enteredUrl.contains('192.168.') || enteredUrl.contains('10.')) {
+          // For Vercel or localhost, use https without port
+          enteredUrl = 'https://$enteredUrl/api/camera';
+        } else {
+          // For local network IPs, use http with port 3000
+          enteredUrl = 'http://$enteredUrl:3000/api/camera';
+        }
+      } else {
+        // Just an IP without dots - unlikely but default to local format
+        enteredUrl = 'http://$enteredUrl:3000/api/camera';
+      }
     }
 
     // Proceed with connection and validate access key
     setState(() => _isLoading = true);
-
+    
     try {
+      // Show the URL being used for debugging
+      debugPrint('Attempting connection to: $enteredUrl');
+          
       // Perform Handshake with PIN validation
       final success = await SecConn.registerKey(enteredUrl, pin: enteredKey);
-
+    
       // Check if widget is still mounted before using context
       if (!mounted) return;
-
+    
       if (success) {
         Navigator.pushNamed(
             context,
@@ -62,12 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
             arguments: enteredUrl, // Pass full URL to camera screen
         );
       } else {
-        setState(() => _errorMessage = 'Invalid access key or connection failed. Check IP/Network.');
+        setState(() => _errorMessage = 'Invalid access key or connection failed. Check IP/Network. Attempted URL: $enteredUrl');
       }
     } catch (e) {
       // Handle any exception during connection
       if (mounted) {
-        setState(() => _errorMessage = 'Connection failed: ${e.toString()}');
+        setState(() => _errorMessage = 'Connection failed: ${e.toString()}. URL: $enteredUrl');
       }
     } finally {
       // Always stop loading indicator
